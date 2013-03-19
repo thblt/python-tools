@@ -1,4 +1,3 @@
-
 class SimpleTree(object):
 	parent = None
 	role = None
