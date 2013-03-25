@@ -52,7 +52,7 @@ def user_locale(fallback=None, silent=True):
 
 	try:
 		if not silent: print("Trying to find user's locale by using PyQt4 libraries.")
-		from PyQt4.QtCre import QLocale
+		from PyQt4.QtCore import QLocale
 		loc = QLocale().name()
 		loc = loc.split("_")
 		if len(loc) == 2: return loc
