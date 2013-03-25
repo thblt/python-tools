@@ -1,32 +1,5 @@
 import os, platform,math
 
-def user_locale(fallback=(None, None)):
-	""" Attempts at all costs to return a locale for the current user. """
-	import locale, json
-	from subprocess import Popen, PIPE
-
-	loc = locale.getdefaultlocale()
-	if loc[0]:
-		return loc
-	
-	ver = platform.mac_ver()
-	if (ver):
-		ver = ver[0].split(".")
-		# No plutil before 10.2 (manpage). Sorry 10.1 users, but please.
-		# @TODO Should check when the file we dig appeared, and if it still exists in 10.8 and above.
-		if int(ver[0]) == 10 and int(ver[1]) >= 2: 
-			# Let's dig
-			try:
-				args = ["plutil", "-convert", "json", "-o", "-", os.path.expanduser("~/Library/Preferences/.GlobalPreferences.plist")]
-				p = Popen(args, stdout=PIPE)
-				out = p.communicate()
-				loc = (json.loads(str(out, "UTF-8"))['AppleLocale'])
-				loc = loc.split("_")
-				if len(loc) == 2: return loc
-			except Exception:
-				pass
-	
-	return fallback
 
 def is_macosx(minVer=0, maxVer=1000):
 	
@@ -72,3 +45,35 @@ def is_macosx(minVer=0, maxVer=1000):
 
 	return False
 	
+def user_locale(fallback=None, silent=True):
+	""" Attempts at all costs to return a locale for the current user. """
+	import locale, json
+	from subprocess import Popen, PIPE
+
+	try:
+		if not silent: print("Trying to find user's locale by using PyQt4 libraries.")
+		from PyQt4.QtCre import QLocale
+		loc = QLocale().name()
+		loc = loc.split("_")
+		if len(loc) == 2: return loc
+	except Exception:
+		pass
+	
+	if (is_macosx("Jaguar")): 
+		if not silent: print("Trying to find user's locale by using MacOSX preferences plist.")
+		try:
+			args = ["plutil", "-convert", "json", "-o", "-", os.path.expanduser("~/Library/Preferences/.GlobalPreferences.plist")]
+			p = Popen(args, stdout=PIPE)
+			out = p.communicate()
+			loc = (json.loads(str(out[0], "UTF-8"))['AppleLocale'])
+			loc = loc.split("_")
+			if len(loc) == 2: return loc
+		except Exception:
+			pass
+
+	if not silent: print("Trying to find user's locale by using Python locale object.")	
+	loc = locale.getdefaultlocale()
+	if loc[0]:
+		return loc
+
+	return fallback
