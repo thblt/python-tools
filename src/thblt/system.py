@@ -1,5 +1,4 @@
-import os, platform,math
-
+import math, platform, os
 
 def is_macosx(minVer=0, maxVer=1000):
 	
@@ -23,13 +22,15 @@ def is_macosx(minVer=0, maxVer=1000):
 			"mountain lion":8,
 			"mountainlion":8,
 			"ml":8,
-			"lynx":8}
+			"mavericks":9,
+            "yosemite":10 
+            }
 	
 	range_ = []
 	for v in (minVer, maxVer):
 		try:
 			major = int(v)
-			minor = int(v*10 % 10)
+			minor = int(v*10 % 10) # @FIXME Yosemite: 10.10 == 10.1
 		except ValueError as e:
 			v = v.lower()
 			if v in versions.keys():
