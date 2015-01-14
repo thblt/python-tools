@@ -15,7 +15,7 @@ def is_macosx(minVer=0, maxVer=1000):
 			"panther":3,
 			"tiger":4,
 			"leopard":5,
-			"snow Leopard":6,
+			"snow leopard":6,
 			"snowleopard":6,
 			"sl":6,
 			"lion":7,
