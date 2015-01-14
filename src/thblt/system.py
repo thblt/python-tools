@@ -23,7 +23,7 @@ def is_macosx(minVer=0, maxVer=1000):
 			"mountainlion":8,
 			"ml":8,
 			"mavericks":9,
-            "yosemite":10 
+			"yosemite":10 
             }
 	
 	range_ = []
